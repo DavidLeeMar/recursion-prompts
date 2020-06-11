@@ -244,21 +244,118 @@ var palindrome = function(string) {
 };
 
 // 11. Write a function that returns the remainder of x divided by y without using the
-// modulo (%) operator.
+// modulo () operator.
 // modulo(5,2) // 1
 // modulo(17,5) // 2
 // modulo(22,6) // 4
 var modulo = function(x, y) {
+  function abs(num) {
+    if (num > 0) {
+      return num;
+    } else if (num === 0) {
+      return 0;
+    } else {
+      return 1 + abs(num+1);
+    }
+  }
+  function toNeg(negNum) {
+    if (negNum === 0) {
+      return 0;
+    } else {
+      return -1 + toNeg(negNum - 1);
+    }
+  }
+
+  if (y === 0) {
+    return NaN;
+  } else if (x === 0){
+    return 0;
+  } else if ((x < 0) && (y < 0)) {
+    return toNeg(modulo(abs(x),abs(y)));
+  } else if ((x < 0) && (y > 0)) {
+    return toNeg(modulo(abs(x),abs(y)));
+  } else if ((x > 0) && (y < 0)) {
+    return modulo(abs(x),abs(y));
+  } else if ((x > 0) && (y > 0)) {
+      if (x < y) {
+        return x;
+      } else {
+        return modulo(x - y, y);
+      };
+  }
 };
 
 // 12. Write a function that multiplies two numbers without using the * operator or
 // Math methods.
 var multiply = function(x, y) {
+  function abs(num) {
+    if (num > 0) {
+      return num;
+    } else if (num === 0) {
+      return 0;
+    } else {
+      return 1 + abs(num+1);
+    }
+  }
+  function toNeg(negNum) {
+    if (negNum === 0) {
+      return 0;
+    } else {
+      return -1 + toNeg(negNum - 1);
+    }
+  }
+
+  if (y === 0) {
+    return 0;
+  } else if (x === 0) {
+    return 0;
+  } else if ((x < 0) && (y < 0)) {
+    return multiply(abs(x),abs(y));
+  } else if ((x < 0) && (y > 0)) {
+    return toNeg(multiply(abs(x),abs(y)));
+  } else if ((x > 0) && (y < 0)) {
+    return toNeg(multiply(abs(x),abs(y)));
+  } else if ((x > 0) && (y > 0)) {
+      return x + multiply(x, y -1);
+  }
 };
 
 // 13. Write a function that divides two numbers without using the / operator or
 // Math methods to arrive at an approximate quotient (ignore decimal endings).
 var divide = function(x, y) {
+  function abs(num) {
+    if (num > 0) {
+      return num;
+    } else if (num === 0) {
+      return 0;
+    } else {
+      return 1 + abs(num+1);
+    }
+  }
+  function toNeg(negNum) {
+    if (negNum === 0) {
+      return 0;
+    } else {
+      return -1 + toNeg(negNum - 1);
+    }
+  }
+
+  if ((x < 0) && (y < 0)) {
+    return divide(abs(x), abs(y));
+  } else if (((x < 0) && (y > 0)) || ((x > 0) && (y < 0))) {
+    return toNeg(divide(abs(x), abs(y)));
+  } else if ((x === 0) && (y === 0)) {
+    return NaN;
+  } else if (y === 0) {
+    return 'infinity';
+  } else if (x === 0) {
+    return 0;
+  } else if ((x - y) >= 0) {
+    return 1 + divide(x - y, y)
+  } else {
+    return 0;
+  }
+
 };
 
 // 14. Find the greatest common divisor (gcd) of two positive numbers. The GCD of two
@@ -267,6 +364,18 @@ var divide = function(x, y) {
 // http://www.cse.wustl.edu/~kjg/cse131/Notes/Recursion/recursion.html
 // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/the-euclidean-algorithm
 var gcd = function(x, y) {
+  if ((x < 0) || (y < 0)) {
+    return null;
+  } else if (x === 0) {
+    return y;
+  } else if (y === 0) {
+    return x;
+  } else {
+    let remainder = x % y;
+    return gcd(y, remainder);
+  }
+
+
 };
 
 // 15. Write a function that compares each character of two strings and returns true if
@@ -274,21 +383,55 @@ var gcd = function(x, y) {
 // compareStr('house', 'houses') // false
 // compareStr('tomato', 'tomato') // true
 var compareStr = function(str1, str2) {
+  if ((str1.length === 0) && (str2.length === 0)) {
+    return true;
+  }
+
+  if (str1[0] === str2[0]){
+    return compareStr(str1.slice(1, str1.length), str2.slice(1, str2.length));
+  } else {
+    return false;
+  }
 };
 
 // 16. Write a function that accepts a string and creates an array where each letter
 // occupies an index of the array.
 var createArray = function(str) {
+  if (str.length === 0) {
+    return [];
+  } else {
+    let resultArray = createArray(str.slice(1, str.length));
+    resultArray.unshift(str[0]);
+    return resultArray;
+  }
 };
 
 // 17. Reverse the order of an array
 var reverseArr = function(array) {
+  let length = array.length;
+
+  if (length === 0) {
+    return [];
+  } else {
+    let element = array.pop();
+    let result = reverseArr(array);
+    result.unshift(element);
+    return result;
+  }
 };
 
 // 18. Create a new array with a given value and length.
 // buildList(0,5) // [0,0,0,0,0]
 // buildList(7,3) // [7,7,7]
 var buildList = function(value, length) {
+  if (length === 0) {
+    return [];
+  } else {
+    let array = buildList(value, length -1);
+    array.push(value);
+    return array;
+  }
+
 };
 
 // 19. Implement FizzBuzz. Given integer n, return an array of the string representations of 1 to n.
@@ -297,12 +440,44 @@ var buildList = function(value, length) {
 // For numbers which are multiples of both three and five, output “FizzBuzz” instead of the number.
 // fizzBuzz(5) // ['1','2','Fizz','4','Buzz']
 var fizzBuzz = function(n) {
+  if (n === 0) {
+    return [];
+  } else {
+    if ((n % 5 === 0) && (n % 3 === 0)) {
+      let result = fizzBuzz(n - 1);
+      result.push('FizzBuzz');
+      return result;
+    } else if (n % 5 === 0) {
+      let result = fizzBuzz(n - 1);
+      result.push('Buzz');
+      return result;
+    } else if (n % 3 === 0) {
+      let result = fizzBuzz(n - 1);
+      result.push('Fizz');
+      return result;
+    } else {
+      let result = fizzBuzz(n - 1);
+      result.push(n.toString());
+      return result;
+    }
+  }
 };
 
 // 20. Count the occurence of a value in a list.
 // countOccurrence([2,7,4,4,1,4], 4) // 3
 // countOccurrence([2,'banana',4,4,1,'banana'], 'banana') // 2
 var countOccurrence = function(array, value) {
+
+  if (array.length === 0) {
+    return 0;
+  } else {
+    let element = array.pop();
+    if (element === value) {
+      return 1 + countOccurrence(array, value);
+    } else {
+      return countOccurrence(array, value);
+    }
+  }
 };
 
 // 21. Write a recursive version of map.
