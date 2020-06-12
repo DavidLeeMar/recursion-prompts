@@ -551,6 +551,14 @@ var flatten = function(array) {
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
 var letterTally = function(str, obj) {
+  if (str.length === 0) {
+    return {};
+  } else {
+    obj = letterTally(str.slice(1, str.length));
+
+    obj[str[0]] === undefined ? obj[str[0]] = 1 : obj[str[0]]++;
+    return obj;
+  };
 };
 
 // 32. Eliminate consecutive duplicates in a list. If the list contains repeated
@@ -559,18 +567,61 @@ var letterTally = function(str, obj) {
 // compress([1,2,2,3,4,4,5,5,5]) // [1,2,3,4,5]
 // compress([1,2,2,3,4,4,2,5,5,5,4,4]) // [1,2,3,4,2,5,4]
 var compress = function(list) {
+  let arrayCopy = list.slice();
+
+  if (arrayCopy.length === 0) {
+    return [];
+  } else {
+    let value = arrayCopy.shift();
+    if (value === arrayCopy[0]) {
+      return compress(arrayCopy);
+    } else {
+      let result = compress(arrayCopy);
+      result.unshift(value);
+      return result;
+    }
+  }
 };
 
 // 33. Augment every element in a list with a new value where each element is an array
 // itself.
 // augmentElements([[],[3],[7]], 5); // [[5],[3,5],[7,5]]
 var augmentElements = function(array, aug) {
+  let arrayCopy = array.slice();
+
+  if (arrayCopy.length === 0) {
+    return [];
+  } else {
+    let value = arrayCopy.shift();
+    if (Array.isArray(value) === true) {
+      value.push(aug);
+    };
+    let result = augmentElements(arrayCopy, aug);
+    result.unshift(value);
+    return result;
+  }
+
 };
 
 // 34. Reduce a series of zeroes to a single 0.
 // minimizeZeroes([2,0,0,0,1,4]) // [2,0,1,4]
 // minimizeZeroes([2,0,0,0,1,0,0,4]) // [2,0,1,0,4]
 var minimizeZeroes = function(array) {
+  let arrayCopy = array.slice();
+
+  if (array.length === 0) {
+    return [];
+  } else {
+    if ((arrayCopy[0] === 0) && (arrayCopy[1] === 0)) {
+      arrayCopy.shift();
+      return minimizeZeroes(arrayCopy);
+    } else {
+      let value = arrayCopy.shift();
+      let result = minimizeZeroes(arrayCopy)
+      result.unshift(value);
+      return result;
+    }
+  }
 };
 
 // 35. Alternate the numbers in an array between positive and negative regardless of
@@ -578,12 +629,69 @@ var minimizeZeroes = function(array) {
 // alternateSign([2,7,8,3,1,4]) // [2,-7,8,-3,1,-4]
 // alternateSign([-2,-7,8,3,-1,4]) // [2,-7,8,-3,1,-4]
 var alternateSign = function(array) {
+  let newArray = array.slice();
+
+  if (newArray.length === 0) {
+    return [];
+  } else if (newArray.length === 1) {
+    let element1 = newArray.shift();
+    element1 = Math.abs(element1);
+    let result = alternateSign(newArray);
+    newArray.unshift(element1);
+    return result;
+  } else {
+    let element1 = newArray.shift();
+    let element2 = newArray.shift();
+    element1 = Math.abs(element1);
+    element2 = Math.abs(element2) * -1;
+    let result = alternateSign(newArray);
+    result.unshift(element2);
+    result.unshift(element1);
+    return result;
+  }
+
+
 };
+
 
 // 36. Given a string, return a string with digits converted to their word equivalent.
 // Assume all numbers are single digits (less than 10).
 // numToText("I have 5 dogs and 6 ponies"); // "I have five dogs and six ponies"
 var numToText = function(str) {
+  //base case is when string's length is zero
+  //return an empty string
+  if (str.length === 0) {
+    return '';
+  }
+
+  //create an object with the property matching 0-9 as words
+  let numValues = {
+    0: 'zero',
+    1: 'one',
+    2: 'two',
+    3: 'three',
+    4: 'four',
+    5: 'five',
+    6: 'six',
+    7: 'seven',
+    8: 'eight',
+    9: 'nine'
+  };
+
+//take the element at index zero, check to see if it is defined in the object num Value
+//append the text equivalent to the string returned by calling
+//numToText when slicing elements 1 to str.length
+//if the result is not a number
+//append the string to the string returned by calling numToText
+  if (numValues[str[0]] === undefined) {
+    let characters = numToText(str.slice(1,str.length)).split('');
+    characters.unshift(str[0]);
+    return characters.join('');
+  } else {
+    let characters = numToText(str.slice(1,str.length)).split('');
+    characters.unshift(numValues[str[0]]);
+    return characters.join('');
+  }
 };
 
 
