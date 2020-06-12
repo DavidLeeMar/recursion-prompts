@@ -659,17 +659,49 @@ var nestedEvenSum = function(obj) {
 // 30. Flatten an array containing nested arrays.
 // flatten([1,[2],[3,[[4]]],5]); // [1,2,3,4,5]
 var flatten = function(array) {
-  /*if (array.length === 0) {
+  //**Base Case**  is when the length of the array is 0
+  if (array.length === 0) {
     return [];
   } else {
-    if
-    //merge on flat array to another
-      //pop and unshift until first array is empty
+    //a copy of array is created without the element at index 0, and flatten is called on the rest of the array
+    //eventually, this causes our base case to match and we can handle each element separately
+    let result = flatten(array.slice(1, array.length));
+    //creating an alias for the element at index 0
+    let firstElement = array[0];
+    //if the element is an array with a length of 0, we can simply discard it
+    if ((Array.isArray(firstElement)) && (firstElement.length === 0)) {
+      return result;
+      //if the element is an array that has only one element
+    } else if ((Array.isArray(firstElement)) && (firstElement.length === 1)) {
+      //these three lines work to remove a single element nested inside arrays
+      firstElement = flatten(firstElement);
+      firstElement = firstElement[0];
+      result.unshift(firstElement);
+      return result;
+      //if the element is an array that has multiple elements
+    } else if ((Array.isArray(firstElement)) && (firstElement.length > 1)) {
+      firstElement = flatten(firstElement);
+      merge(firstElement, result);
+      return result;
+      //if the element is not an array, it will unshift it on the the flattened array
+    } else {
+      result.unshift(firstElement);
+      return result;
+    }
 
+  };
 
-  }*/
+  function merge(arr1, arr2) {
+    if (arr1.length === 0) {
+      return arr2;
+    } else {
+      let result = merge(arr1.slice(1, arr1.length),arr2);
+      result.unshift(arr1[0]);
+      return result;
+    }
+  };
+
 };
-
 // 31. Given a string, return an object containing tallies of each letter.
 // letterTally('potato'); // {p:1, o:2, t:2, a:1}
 var letterTally = function(str, obj) {
